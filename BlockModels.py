@@ -8,13 +8,13 @@ class Model:
 
     def hit(self, other, height):
         return  (((self.x + 75 < other.x + 75) and (self.x + 75 > other.x - 75)) or ((self.x - 75 < other.x + 75) and (self.x - 75 > other.x - 75))) and self.y - height <= 12
-
+    
 class Block(Model):
     def __init__(self, world, x, y, old_height):
         super().__init__(world, x, y)
         
         self.old_height = old_height
-        self.speed = 5
+        self.speed = 35
         self.down_speed = 10
         self.move_down = False
 
@@ -44,6 +44,7 @@ class World:
         self.i = 0
         self.score = 0
         self.blocks = []
+        self.game_over = False
         for i in range(World.NUM_BLOCK):
             block = Block(self, width / 2, height - 10, i * 20)
             self.blocks.append(block)
@@ -56,7 +57,7 @@ class World:
             self.i += 1
 
         if self.blocks[self.i].hit(self.blocks[self.i - 1], self.old_height):
-            self.score -= 1
+            self.game_over = True
         else:
             self.score += 0
             

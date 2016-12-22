@@ -29,22 +29,42 @@ class BlockBuilder(arcade.Window):
         arcade.set_background_color(arcade.color.BLACK)
 
         self.world = World(width, height)
+
+        self.current_state = GAME_RUNNING
+        self.total_time = 0.0
         
         self.block_sprites = []
         for block in self.world.blocks:
             self.block_sprites.append(ModelSprite('images/block.png',model = block))
-         
-    def on_draw(self):
-        arcade.start_render()
+
+    def draw_game(self):
         for sprite in self.block_sprites:
             sprite.draw()
-
-        arcade.draw_text(str(self.world.score),
-                         self.width - 30, self.height - 30,
+            
+        minutes = int(self.total_time) // 60
+        seconds = int(self.total_time) % 60
+        output = "Time: {:02d}:{:02d}".format(minutes, seconds)
+                        
+        arcade.draw_text(output,
+                         self.width - 150, self.height - 50,
                          arcade.color.WHITE, 20) 
 
+    def draw_game_over(self):
+        output = "Game Over"
+        arcade.draw_text(output, 150, 300, arcade.color.WHITE, 30)
+        
+    def on_draw(self):
+        arcade.start_render()
+        if self.current_state == GAME_RUNNING:
+            self.draw_game()
+        if self.current_state == GAME_OVER:
+            self.draw_game_over()
+        
     def animate(self, delta):
         self.world.animate(delta)
+        if self.world.game_over:
+            self.current_state = GAME_OVER
+        self.total_time += delta
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)
