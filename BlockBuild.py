@@ -5,6 +5,8 @@ from BlockModels import Block,World
  
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 600
+GAME_RUNNING = 1
+GAME_OVER = 2
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
