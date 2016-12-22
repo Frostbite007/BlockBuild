@@ -7,7 +7,7 @@ class Model:
         self.y = y
 
     def hit(self, other):
-        return ((self.x + 75 <= other.x + 75) and (self.x + 75 >= other.x - 75)) or ((self.x - 75 <= other.x + 75) and (self.x - 75 >= other.x - 75))
+        return (((self.x + 75 < other.x + 75) and (self.x + 75 > other.x - 75)) and (self.y - other.y == 20)) or (((self.x - 75 < other.x + 75) and (self.x - 75 > other.x - 75)) and (self.y - other.y == 20))
 
 class Block(Model):
     def __init__(self, world, x, y, old_height):
@@ -42,6 +42,7 @@ class World:
         self.height = height
         self.old_height = 0
         self.i = 0
+        self.score = 0
         self.blocks = []
         for i in range(World.NUM_BLOCK):
             block = Block(self, width / 2, height - 10, i * 20)
@@ -50,6 +51,12 @@ class World:
     def animate(self, delta):
         for block in self.blocks:
             block.animate(delta)
+
+        if self.blocks[self.i].hit(self.blocks[self.i - 1]):
+            self.score -= 1
+        else:
+            self.score +=1
+            
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE:
